@@ -21,3 +21,6 @@ Clone the project:
 
 ```bash
 git clone https://github.com/amulyagoapl/Chessboard.git
+
+
+![Chessboard Screenshot](./Screenshot%202025-06-22%20112039.png)
