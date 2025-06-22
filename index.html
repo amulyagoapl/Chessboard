@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Chess Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      width: 480px;
+      margin: 20px auto;
+      border: 2px solid #000;
+    }
+
+    .square {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
+    }
+
+    .light {
+      background-color: #f0d9b5;
+    }
+
+    .dark {
+      background-color: #b58863;
+    }
+
+    .square div {
+      cursor: grab;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Chess Game</h1>
+  <div class="board" id="board"></div>
+
+  <script>
+    const board = document.getElementById('board');
+
+    const initialBoard = [
+      ['r','n','b','q','k','b','n','r'],
+      ['p','p','p','p','p','p','p','p'],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['P','P','P','P','P','P','P','P'],
+      ['R','N','B','Q','K','B','N','R'],
+    ];
+
+    const pieceMap = {
+      'P': '♙', 'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔',
+      'p': '♟', 'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚',
+    };
+
+    let dragged = null;
+
+    function createBoard() {
+      board.innerHTML = '';
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          const square = document.createElement('div');
+          square.classList.add('square');
+          square.classList.add((row + col) % 2 === 0 ? 'light' : 'dark');
+          square.setAttribute('data-row', row);
+          square.setAttribute('data-col', col);
+
+          const piece = initialBoard[row][col];
+          if (piece) {
+            const pieceEl = document.createElement('div');
+            pieceEl.textContent = pieceMap[piece];
+            pieceEl.setAttribute('draggable', true);
+            pieceEl.classList.add('piece');
+            pieceEl.dataset.piece = piece;
+            square.appendChild(pieceEl);
+          }
+
+          square.addEventListener('dragover', e => e.preventDefault());
+
+          square.addEventListener('drop', function (e) {
+            e.preventDefault();
+            if (dragged) {
+              this.innerHTML = '';
+              this.appendChild(dragged);
+              dragged = null;
+            }
+          });
+
+          board.appendChild(square);
+        }
+      }
+
+      document.querySelectorAll('.piece').forEach(piece => {
+        piece.addEventListener('dragstart', function (e) {
+          dragged = this;
+        });
+      });
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>
